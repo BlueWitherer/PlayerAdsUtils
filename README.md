@@ -6,8 +6,8 @@ Community-made ads for awesome levels!
 ## Development
 Let's start this off by adding this library as a CPM package in your `CMakeLists.txt`!
 ```cmake
-CPMAddPackage("gh:BlueWitherer/PlayerAdsUtils@1.0.0") # or #master for latest commit
-target_link_libraries(${PROJECT_NAME} PRIVATE PlayerAdsUtils)
+CPMAddPackage("gh:BlueWitherer/PlayerAdsUtils@1.0.0") # or master for latest commit
+target_link_libraries(${PROJECT_NAME} PlayerAdsUtils)
 ```
 
 You can access all utilities in this library by including [`Include.hpp`](include/PlayerAdsUtils/Include.hpp) in your code. Make sure to use the `ads` namespace to directly access all the needed classes.

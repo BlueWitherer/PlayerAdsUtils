@@ -79,7 +79,7 @@ namespace ads {
          * Create a new advertisement
          * @param type The type of ad to create
          */
-        static Advertisement* create(AdType type = AdType::Banner = "");
+        static Advertisement* create(AdType type = AdType::Banner);
 
         /**
          * Set the expected type of advertisement
