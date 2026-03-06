@@ -12,6 +12,8 @@
 using namespace geode::prelude;
 using namespace geode::utils;
 
+using namespace ads;
+
 class ReportPopup::Impl final {
 public:
     unsigned int adId = 0;

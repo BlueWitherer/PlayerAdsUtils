@@ -1,6 +1,6 @@
 #include <PlayerAdsUtils/Advertisement.hpp>
 
-#include "AdPreview.hpp"
+#include <PlayerAdsUtils/AdPreview.hpp>
 
 #include <argon/argon.hpp>
 
@@ -14,6 +14,7 @@
 
 using namespace geode::prelude;
 using namespace geode::utils;
+
 using namespace ads;
 
 constexpr CCSize ads::getAdSize(AdType type) {
