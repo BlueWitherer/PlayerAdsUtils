@@ -4,7 +4,7 @@ Community-made ads for awesome levels!
 > [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W31QRZA4)
 
 ## Development
-Let's start this off by adding this library as a CPM package in your `CMakeLists.txt`!
+Let's start off by adding this library as a CPM package in your `CMakeLists.txt`!
 ```cmake
 CPMAddPackage("gh:BlueWitherer/PlayerAdsUtils@1.0.0") # or "#master" for latest commit
 target_link_libraries(${PROJECT_NAME} PlayerAdsUtils)
