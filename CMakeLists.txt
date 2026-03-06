@@ -25,12 +25,14 @@ endif()
 target_compile_definitions(${PROJECT_NAME} PRIVATE GEODE_MOD_ID="_pau")
 target_compile_definitions(${PROJECT_NAME} PRIVATE PAU_VERSION=${PROJECT_VERSION})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC geode-sdk)
-
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(PlayerAdsUtils geode-sdk)
 
 if(NOT TARGET argon)
     CPMAddPackage("gh:GlobedGD/argon@1.4.5")
 endif()
 
-target_link_libraries(${PROJECT_NAME} PUBLIC argon)
+if(TARGET argon)
+    target_link_libraries(PlayerAdsUtils argon)
+endif()
+
+target_include_directories(PlayerAdsUtils PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
