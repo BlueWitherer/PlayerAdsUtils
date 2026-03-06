@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
-project(PlayerAdsUtils VERSION 1.0.0)
+project(PlayerAdsUtils VERSION 1.0.1)
 
 file(GLOB_RECURSE SOURCES src/*.cpp)
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
@@ -15,13 +15,13 @@ if(PAU_TRACK_STATS)
     add_compile_definitions(PAU_TRACK_STATS)
 endif()
 
-if (NOT DEFINED ENV{GEODE_SDK})
-    message(FATAL_ERROR Unable to find Geode SDK! Please define GEODE_SDK environment variable to point to Geode)
+if(NOT DEFINED ENV{GEODE_SDK})
+    message(FATAL_ERROR "Unable to find Geode SDK! Please define GEODE_SDK environment variable to point to Geode")
 else()
-    message(STATUS Found Geode $ENV{GEODE_SDK})
+    message(STATUS "Found Geode: $ENV{GEODE_SDK}")
 endif()
 
-if (PROJECT_IS_TOP_LEVEL)
+if(PROJECT_IS_TOP_LEVEL)
     add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 endif()
 
