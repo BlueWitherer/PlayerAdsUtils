@@ -9,6 +9,12 @@
 #include <Geode/ui/LazySprite.hpp>
 
 namespace ads {
+    namespace particles {
+        inline constexpr auto banner = "1,2065,2,4515,3,855,155,1,156,20,145,20a-1a1a0.3a15a90a0a20a0a100a25a0a25a0a0a0a0a10a5a0a180a1a0a1a0a1a0a1a0a5a0a180a0a1a0a1a0a1a0a1a0a0a1a1a0a0a0a0a0a0a0a0a2a1a0a0a0a41a0a0a0a0a0a0a0a0a0a0a0a0a0a0;";
+        inline constexpr auto square = "1,2065,2,4515,3,855,155,1,156,20,145,20a-1a1a0.3a15a90a0a20a0a50a50a0a25a0a0a0a0a10a5a0a180a1a0a1a0a1a0a1a0a5a0a180a0a1a0a1a0a1a0a1a0a0a1a1a0a0a0a0a0a0a0a0a2a1a0a0a0a41a0a0a0a0a0a0a0a0a0a0a0a0a0a0;";
+        inline constexpr auto skyscraper = "1,2065,2,4515,3,855,155,1,156,20,145,20a-1a1a0.3a15a90a0a20a0a25a100a0a25a0a0a0a0a10a5a0a180a1a0a1a0a1a0a1a0a5a0a180a0a1a0a1a0a1a0a1a0a0a1a1a0a0a0a0a0a0a0a0a2a1a0a0a0a41a0a0a0a0a0a0a0a0a0a0a0a0a0a0;";
+    };
+
     enum class AdType : unsigned int {
         Banner = 1,
         Square = 2,
@@ -63,10 +69,11 @@ namespace ads {
         class Impl;
         std::shared_ptr<Impl> m_impl;
 
-        // Reloads the type of advertisement
-        void reloadType();
         // Reloads the advertisement button
         void reload();
+
+        // Reloads the type of advertisement
+        void reloadType();
 
     protected:
         Advertisement();
