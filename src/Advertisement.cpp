@@ -59,7 +59,6 @@ namespace ads {
         CCSprite* adIcon = nullptr;
 
         bool hasLoaded = false;
-        bool loadRandom = false;
 
         int loadId = 0;
 
@@ -430,7 +429,6 @@ namespace ads {
         );
 
         m_impl->hasLoaded = true;
-        m_impl->loadRandom = true;
 
         log::info("Sent request for random advertisement");
     };
@@ -451,7 +449,6 @@ namespace ads {
         );
 
         m_impl->hasLoaded = true;
-        m_impl->loadRandom = false;
         m_impl->loadId = id;
 
         log::info("Sent request for advertisement of ID {}", id);
