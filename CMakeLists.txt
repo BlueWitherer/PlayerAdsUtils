@@ -20,6 +20,8 @@ if (PROJECT_IS_TOP_LEVEL)
     add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 endif()
 
+option(ADS_TRACK_STATS "Track views and clicks" OFF)
+
 target_compile_definitions(${PROJECT_NAME} PRIVATE GEODE_MOD_ID="_pau")
 target_compile_definitions(${PROJECT_NAME} PRIVATE PAU_VERSION=${PROJECT_VERSION})
 

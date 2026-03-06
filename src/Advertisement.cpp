@@ -131,6 +131,7 @@ void Advertisement::reloadType() {
 
     log::info("setting up callbacks");
 
+#ifdef ADS_TRACK_STATS
     // capture weak impl to avoid touching freed memory if Advertisement is destroyed
     auto weak_impl_auth = std::weak_ptr<Impl>(m_impl);
     async::spawn(
@@ -149,6 +150,7 @@ void Advertisement::reloadType() {
             };
         }
     );
+#endif
 
     // prepare request for ad data
     auto req = web::WebRequest();
@@ -341,6 +343,7 @@ void Advertisement::reloadType() {
 };
 
 void Advertisement::handleAdResponse(web::WebResponse const& res) {
+#ifdef ADS_TRACK_STATS
     if (res.ok()) {
         auto jsonRes = res.json();
         if (!jsonRes) {
@@ -400,6 +403,7 @@ void Advertisement::handleAdResponse(web::WebResponse const& res) {
     } else {
         log::error("Failed to fetch ad: HTTP {}", res.code());
     };
+#endif
 };
 
 void Advertisement::load(int id) {
