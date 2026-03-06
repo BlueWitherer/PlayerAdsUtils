@@ -82,22 +82,16 @@ namespace ads {
         static Advertisement* create(AdType type = AdType::Banner);
 
         /**
-         * Set the expected type of advertisement
-         * @param type The type of ad to set
-         */
-        void setType(AdType type);
-
-        /**
-         * Load a random advertisement
-         */
-        void loadRandom();
-
-        /**
          * Load a specific advertisement by its ID
          * @param id The ID of the ad to load
          * @warning This will override the current set type of ad
          */
         void load(int id);
+
+        /**
+         * Load a random advertisement
+         */
+        void loadRandom();
 
         /**
          * Get the LazySprite associated with the advertisement

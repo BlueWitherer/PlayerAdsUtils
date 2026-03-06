@@ -408,9 +408,25 @@ namespace ads {
         };
     };
 
-    void Advertisement::setType(AdType type) {
-        m_impl->type = type;
-        reloadType();
+    void Advertisement::load(int id) {
+        reloadType();  // refresh any existing nodes
+
+        log::debug("Preparing request for advertisement of ID {}...", id);
+
+        auto request = web::WebRequest();
+        request.userAgent("PlayerAdvertisements/1.0");
+        request.timeout(std::chrono::seconds(15));
+        request.param("id", id);
+
+        m_impl->adListener.spawn(
+            request.get("https://ads.arcticwoof.xyz/api/ad/get"),
+            [this](web::WebResponse res) { this->handleAdResponse(res); }
+        );
+
+        m_impl->hasLoaded = true;
+        m_impl->loadId = id;
+
+        log::info("Sent request for advertisement of ID {}", id);
     };
 
     void Advertisement::loadRandom() {
@@ -431,27 +447,6 @@ namespace ads {
         m_impl->hasLoaded = true;
 
         log::info("Sent request for random advertisement");
-    };
-
-    void Advertisement::load(int id) {
-        reloadType();  // refresh any existing nodes
-
-        log::debug("Preparing request for advertisement of ID {}...", id);
-
-        auto request = web::WebRequest();
-        request.userAgent("PlayerAdvertisements/1.0");
-        request.timeout(std::chrono::seconds(15));
-        request.param("id", id);
-
-        m_impl->adListener.spawn(
-            request.get("https://ads.arcticwoof.xyz/api/ad/get"),
-            [this](web::WebResponse res) { this->handleAdResponse(res); }
-        );
-
-        m_impl->hasLoaded = true;
-        m_impl->loadId = id;
-
-        log::info("Sent request for advertisement of ID {}", id);
     };
 
     LazySprite* Advertisement::getAdSprite() const {
