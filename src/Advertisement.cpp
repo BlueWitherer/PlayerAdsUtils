@@ -1,6 +1,8 @@
 #include <PlayerAdsUtils/Advertisement.hpp>
 
-#include "ui/AdPreview.hpp"
+#include "AdPreview.hpp"
+
+#include <argon/argon.hpp>
 
 #include <fmt/core.h>
 
@@ -69,8 +71,7 @@ namespace ads {
     Advertisement::Advertisement() : m_impl(std::make_shared<Impl>()) {};
     Advertisement::~Advertisement() {};
 
-    bool Advertisement::init(std::string token, AdType type) {
-        m_impl->token = std::move(token);
+    bool Advertisement::init(AdType type) {
         m_impl->type = type;
 
         if (!CCNode::init()) return false;
@@ -136,6 +137,25 @@ namespace ads {
         m_impl->adSprite->setVisible(true);
 
         log::info("setting up callbacks");
+
+        // capture weak impl to avoid touching freed memory if Advertisement is destroyed
+        auto weak_impl_auth = std::weak_ptr<Impl>(m_impl);
+        async::spawn(
+            argon::startAuth(),
+            [weak_impl_auth](geode::Result<std::string> res) {
+                auto impl = weak_impl_auth.lock();
+                if (!impl) {
+                    log::warn("Auth callback: impl expired");
+                    return;
+                };
+
+                if (res.isOk()) {
+                    impl->token = std::move(res).unwrap();
+                } else {
+                    log::warn("Auth failed: {}", res.unwrapErr());
+                };
+            }
+        );
 
         // prepare request for ad data
         auto req = web::WebRequest();
@@ -351,29 +371,30 @@ namespace ads {
             log::debug("Ad view count: {}, click count: {}", view, click);
             log::debug("Ad glow level: {}", glow);
 
-            log::debug("Sending view tracking request for ad_id={}, user_id={}", id, user);
-            auto viewRequest = web::WebRequest();
-            viewRequest.userAgent("PlayerAdvertisements/1.0");
-            viewRequest.header("Content-Type", "application/json");
-            viewRequest.timeout(std::chrono::seconds(15));
+            if (!m_impl->token.empty()) {
+                log::debug("Sending view tracking request for ad_id={}, user_id={}", id, user);
+                auto viewRequest = web::WebRequest();
+                viewRequest.userAgent("PlayerAdvertisements/1.0");
+                viewRequest.header("Content-Type", "application/json");
+                viewRequest.timeout(std::chrono::seconds(15));
 
-            matjson::Value viewBody = matjson::Value::object();
-            viewBody["ad_id"] = id;
-            viewBody["authtoken"] = m_impl->token;
-            viewBody["account_id"] = GJAccountManager::sharedState()->m_accountID;
+                matjson::Value viewBody = matjson::Value::object();
+                viewBody["ad_id"] = id;
+                viewBody["authtoken"] = m_impl->token;
+                viewBody["account_id"] = GJAccountManager::sharedState()->m_accountID;
 
-            viewRequest.bodyJSON(viewBody);
+                viewRequest.bodyJSON(viewBody);
+                m_impl->viewListener.spawn(viewRequest.post("https://ads.arcticwoof.xyz/api/view"), [this, id, user](web::WebResponse res) {
+                    if (res.ok()) {
+                        log::info("View passed ad_id={}, user_id={}", id, user);
+                    } else {
+                        log::error("View failed with code {} for ad_id={}, user_id={}: {}", res.code(), id, user, res.errorMessage());
+                    };
 
-            m_impl->viewListener.spawn(viewRequest.post("https://ads.arcticwoof.xyz/api/view"), [this, id, user](web::WebResponse res) {
-                if (res.ok()) {
-                    log::info("View passed ad_id={}, user_id={}", id, user);
-                } else {
-                    log::error("View failed with code {} for ad_id={}, user_id={}: {}", res.code(), id, user, res.errorMessage());
-                };
-
-                log::debug("View request completed for ad_id={}, user_id={}", id, user);
-                });
-            log::debug("Sent view tracking request for ad_id={}, user_id={}", id, user);
+                    log::debug("View request completed for ad_id={}, user_id={}", id, user);
+                    });
+                log::debug("Sent view tracking request for ad_id={}, user_id={}", id, user);
+            };
 
             if (m_impl->adSprite && !m_impl->ad.image.empty()) {
                 log::info("Loading ad image from URL: {}", m_impl->ad.image);
@@ -440,9 +461,9 @@ namespace ads {
         return m_impl->adSprite;
     };
 
-    Advertisement* Advertisement::create(std::string token, AdType type) {
+    Advertisement* Advertisement::create(AdType type) {
         auto ret = new Advertisement();
-        if (ret->init(std::move(token), type)) {
+        if (ret->init(type)) {
             ret->autorelease();
             return ret;
         };

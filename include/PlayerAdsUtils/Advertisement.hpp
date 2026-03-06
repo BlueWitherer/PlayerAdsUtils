@@ -72,14 +72,14 @@ namespace ads {
         Advertisement();
         ~Advertisement();
 
-        bool init(std::string token, AdType type);
+        bool init(AdType type);
 
     public:
         /**
          * Create a new advertisement
          * @param type The type of ad to create
          */
-        static Advertisement* create(std::string token, AdType type = AdType::Banner);
+        static Advertisement* create(AdType type = AdType::Banner = "");
 
         /**
          * Set the expected type of advertisement
