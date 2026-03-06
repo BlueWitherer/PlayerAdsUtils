@@ -2,7 +2,9 @@
 
 #include <PlayerAdsUtils/AdPreview.hpp>
 
+#ifdef PAU_TRACK_STATS
 #include <argon/argon.hpp>
+#endif
 
 #include <fmt/core.h>
 
@@ -18,16 +20,12 @@ using namespace geode::utils;
 using namespace ads;
 
 constexpr CCSize ads::getAdSize(AdType type) {
-    constexpr auto banner = CCSize{ 364.f, 45.f };
-    constexpr auto square = CCSize{ 122.6f, 122.6f };
-    constexpr auto skyscraper = CCSize{ 41.f, 314.f };
-
     switch (type) {
     default: [[fallthrough]];
 
-    case AdType::Banner: return banner;
-    case AdType::Square: return square;
-    case AdType::Skyscraper: return skyscraper;
+    case AdType::Banner: return sizes::banner;
+    case AdType::Square: return sizes::square;
+    case AdType::Skyscraper: return sizes::skyscraper;
     };
 };
 
@@ -131,8 +129,7 @@ void Advertisement::reloadType() {
 
     log::info("setting up callbacks");
 
-#ifdef ADS_TRACK_STATS
-    // capture weak impl to avoid touching freed memory if Advertisement is destroyed
+#ifdef PAU_TRACK_STATS
     auto weak_impl_auth = std::weak_ptr<Impl>(m_impl);
     async::spawn(
         argon::startAuth(),
@@ -172,7 +169,6 @@ void Advertisement::reloadType() {
         }
     );
 
-    // capture a weak_ptr to the Impl to avoid using a dangling `this`
     auto weak_impl = std::weak_ptr<Impl>(m_impl);
     m_impl->adSprite->setLoadCallback([weak_impl](Result<> res) {
         auto impl = weak_impl.lock();
@@ -343,8 +339,8 @@ void Advertisement::reloadType() {
 };
 
 void Advertisement::handleAdResponse(web::WebResponse const& res) {
-#ifdef ADS_TRACK_STATS
     if (res.ok()) {
+#ifdef PAU_TRACK_STATS
         auto jsonRes = res.json();
         if (!jsonRes) {
             log::error("Failed to parse ad JSON");
@@ -391,6 +387,7 @@ void Advertisement::handleAdResponse(web::WebResponse const& res) {
                 });
             log::debug("Sent view tracking request for ad_id={}, user_id={}", id, user);
         };
+#endif
 
         if (m_impl->adSprite && !m_impl->ad.image.empty()) {
             log::info("Loading ad image from URL: {}", m_impl->ad.image);
@@ -403,7 +400,6 @@ void Advertisement::handleAdResponse(web::WebResponse const& res) {
     } else {
         log::error("Failed to fetch ad: HTTP {}", res.code());
     };
-#endif
 };
 
 void Advertisement::load(int id) {

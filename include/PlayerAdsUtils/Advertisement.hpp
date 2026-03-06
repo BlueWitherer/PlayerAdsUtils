@@ -9,6 +9,12 @@
 #include <Geode/ui/LazySprite.hpp>
 
 namespace ads {
+    namespace sizes {
+        inline constexpr cocos2d::CCSize banner = { 364.f, 45.f };
+        inline constexpr cocos2d::CCSize square = { 122.6f, 122.6f };
+        inline constexpr cocos2d::CCSize skyscraper = { 41.f, 314.f };
+    };
+
     namespace particles {
         inline constexpr auto banner = "1,2065,2,4515,3,855,155,1,156,20,145,20a-1a1a0.3a15a90a0a20a0a100a25a0a25a0a0a0a0a10a5a0a180a1a0a1a0a1a0a1a0a5a0a180a0a1a0a1a0a1a0a1a0a0a1a1a0a0a0a0a0a0a0a0a2a1a0a0a0a41a0a0a0a0a0a0a0a0a0a0a0a0a0a0;";
         inline constexpr auto square = "1,2065,2,4515,3,855,155,1,156,20,145,20a-1a1a0.3a15a90a0a20a0a50a50a0a25a0a0a0a0a10a5a0a180a1a0a1a0a1a0a1a0a5a0a180a0a1a0a1a0a1a0a1a0a0a1a1a0a0a0a0a0a0a0a0a2a1a0a0a0a41a0a0a0a0a0a0a0a0a0a0a0a0a0a0;";

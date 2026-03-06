@@ -29,10 +29,10 @@ auto ad = Advertisement::create(AdType::Square);
 ```
 
 #### Tracking Engagement
-These ads can track clicks and views. By default, this behavior is **disabled**. You can choose to enable it by setting the **`ADS_TRACK_STATS`** configuration option to `ON`.
+These ads can track clicks and views. By default, this behavior is **disabled**. You can choose to enable it by setting the **`PAU_TRACK_STATS`** configuration option to `ON`.
 
 ```cmake
-set(ADS_TRACK_STATS ON)
+set(PAU_TRACK_STATS ON)
 ```
 
 We normally would **not recommend you use this on your mod** unless it is intended for the Geode index and you simply wish to add a compatibility feature for [Player Advertisements](https://www.geode-sdk.org/mods/arcticwoof.player_advertisements) on your own layers and pop-ups.

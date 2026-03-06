@@ -3,7 +3,9 @@
 #include <PlayerAdsUtils/Advertisement.hpp>
 #include <PlayerAdsUtils/ReportPopup.hpp>
 
+#ifdef PAU_TRACK_STATS
 #include <argon/argon.hpp>
+#endif
 
 #include <Geode/Geode.hpp>
 
@@ -219,7 +221,7 @@ void AdPreview::onPlayButton(CCObject* sender) {
 };
 
 void AdPreview::registerClick(unsigned int adId, std::string_view userId, CCMenuItemSpriteExtra* menuItem) {
-#ifdef ADS_TRACK_STATS
+#ifdef PAU_TRACK_STATS
     log::debug("Sending click tracking request for ad_id={}, user_id={}", adId, userId);
 
     // get argon token yum
@@ -269,7 +271,7 @@ void AdPreview::registerClick(unsigned int adId, std::string_view userId, CCMenu
                     log::debug("Click request completed for ad_id={}, user_id={}", adId, userId);
                 });
             log::debug("Sent click tracking request for ad_id={}, user_id={}", adId, userId);
-});
+        });
 #endif
 };
 

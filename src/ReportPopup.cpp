@@ -1,6 +1,8 @@
 #include <PlayerAdsUtils/ReportPopup.hpp>
 
+#ifdef PAU_TRACK_STATS
 #include <argon/argon.hpp>
+#endif
 
 #include <Geode/Geode.hpp>
 
@@ -47,9 +49,7 @@ bool ReportPopup::init(unsigned int adId, int levelId, std::string description) 
 
     m_mainLayer->addChild(descriptionInput);
 
-    auto menu = CCMenu::create();
-    menu->setPosition({ m_mainLayer->getScaledContentWidth() / 2, 0.f });
-
+#ifdef PAU_TRACK_STATS
     auto submitButton = CCMenuItemSpriteExtra::create(
         ButtonSprite::create("Submit Report", 0, false, "goldFont.fnt", "GJ_button_01.png", 0.f, 1.f),
         this,
@@ -57,9 +57,8 @@ bool ReportPopup::init(unsigned int adId, int levelId, std::string description) 
     );
     submitButton->setID("submit-btn");
 
-    menu->addChild(submitButton);
-
-    m_mainLayer->addChild(menu);
+    m_buttonMenu->addChild(submitButton);
+#endif
 
     auto textArea = MDTextArea::create(
         "Make sure to report this advertisement if you believe it violates the rules.\n\n"
@@ -74,6 +73,7 @@ bool ReportPopup::init(unsigned int adId, int levelId, std::string description) 
 };
 
 void ReportPopup::onSubmitButton(CCObject* sender) {
+#ifdef PAU_TRACK_STATS
     auto descriptionInput = typeinfo_cast<TextInput*>(m_mainLayer->getChildByID("description-input"));
 
     auto upopup = UploadActionPopup::create(nullptr, "Submitting Report...");
@@ -133,6 +133,7 @@ void ReportPopup::onSubmitButton(CCObject* sender) {
             );
         }
     );
+#endif
 };
 
 ReportPopup* ReportPopup::create(unsigned int adId, int levelId, std::string description) {
