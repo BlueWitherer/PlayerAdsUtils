@@ -31,7 +31,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE PAU_VERSION=${PROJECT_VERSION
 target_link_libraries(PlayerAdsUtils geode-sdk)
 
 if(NOT TARGET argon AND PAU_TRACK_STATS)
-    CPMAddPackage("gh:GlobedGD/argon@1.4.5")
+    CPMAddPackage("gh:GlobedGD/argon@1.4.6")
 endif()
 
 if(TARGET argon)
